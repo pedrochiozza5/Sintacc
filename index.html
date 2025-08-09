@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Catálogo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div>
+        <h1 class="brand">Catálogo</h1>
+        <div class="subtitle">Lista: agosto de 2025</div>
+      </div>
+      <div class="header-actions">
+        <input id="search" type="search" placeholder="Buscar por nombre o código..." aria-label="Buscar productos">
+      </div>
+    </div>
+  </header>
+
+  <main class="container main-grid">
+    <aside class="filters" aria-label="Filtros de catálogo">
+      <label>Categoria
+        <select id="categoria"><option value="">Todas las categorías</option></select>
+      </label>
+      <label>Origen
+        <select id="origen"><option value="">Todos los orígenes</option></select>
+      </label>
+      <label>Ordenar
+        <select id="sort">
+          <option value="relevancia">Relevancia</option>
+          <option value="precio_asc">Precio ↑</option>
+          <option value="precio_desc">Precio ↓</option>
+        </select>
+      </label>
+      <label>Items / página
+        <select id="perPage"><option>12</option><option>24</option><option>48</option></select>
+      </label>
+      <div class="filters-note small">Soporta columna `imagen` / `imagen_url` en tu Google Sheet para fotos.</div>
+    </aside>
+
+    <section class="catalog-area">
+      <div id="catalog" class="grid" aria-live="polite"></div>
+      <div class="pager" id="pager"></div>
+    </section>
+  </main>
+
+  <!-- Modal lightbox -->
+  <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog">
+    <button class="lb-close" aria-label="Cerrar imagen">×</button>
+    <div class="lb-content">
+      <img id="lb-img" src="" alt="">
+      <div id="lb-caption" class="lb-caption"></div>
+    </div>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
