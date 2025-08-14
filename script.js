@@ -1,3 +1,5 @@
+// Sintacc/script.js (modificado)
+
 const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1rLTU357l-8vbBXPl7ZgvxFoOhqRWuorn4v7zW3eLsLE/export?format=csv&gid=91821095";
 
 const el = {
@@ -106,11 +108,55 @@ function renderPage(){
   const items = filtered.slice(start, start+perPage);
   el.catalog.innerHTML = items.map(p => {
     const img = p.imagen ? escapeHtml(p.imagen) : 'https://via.placeholder.com/600x360?text=Sin+Imagen';
-    return `\n      <article class="card" tabindex="0">\n        <img loading="lazy" src="${img}" alt="${escapeHtml(p.producto)}" data-img="${img}" onerror="this.onerror=null;this.src='https://via.placeholder.com/600x360?text=Sin+Imagen';">\n        <div class="card-body">\n          <div class="card-title">${escapeHtml(p.producto)}</div>\n          <div class="meta">Código: ${escapeHtml(p.codigo)} • ${p.uni_x_ca} u/caja</div>\n          <div class="meta">${escapeHtml(p.categoria)} — ${escapeHtml(p.origen)}${p.nota ? ' • ' + escapeHtml(p.nota) : ''}</div>\n          <div class="price">$ ${Number(p.precio).toLocaleString('es-AR',{minimumFractionDigits:2})}</div>\n        </div>\n      </article>\n    `;
+    // Añadimos data-product para pasar los datos del producto al botón
+    return `
+      <article class="card" tabindex="0">
+        <img loading="lazy" src="${img}" alt="${escapeHtml(p.producto)}" data-img="${img}" onerror="this.onerror=null;this.src='https://via.placeholder.com/600x360?text=Sin+Imagen';">
+        <div class="card-body">
+          <div class="card-title">${escapeHtml(p.producto)}</div>
+          <div class="meta">Código: ${escapeHtml(p.codigo)} • ${p.uni_x_ca} u/caja</div>
+          <div class="meta">${escapeHtml(p.categoria)} — ${escapeHtml(p.origen)}${p.nota ? ' • ' + escapeHtml(p.nota) : ''}</div>
+          <div class="price">$ ${Number(p.precio).toLocaleString('es-AR',{minimumFractionDigits:2})}</div>
+          <button class="add-to-cart-btn"
+            data-codigo="${escapeHtml(p.codigo)}"
+            data-producto="${escapeHtml(p.producto)}"
+            data-precio="${p.precio}"
+            data-imagen="${img}"
+            data-uni_x_ca="${p.uni_x_ca}"
+            data-categoria="${escapeHtml(p.categoria)}"
+            data-origen="${escapeHtml(p.origen)}"
+            data-nota="${escapeHtml(p.nota || '')}"
+          >Añadir al Carrito</button>
+        </div>
+      </article>
+    `;
   }).join('') || '<div style="padding:1rem;color:#666">No hay productos que coincidan.</div>';
 
   document.querySelectorAll('.card img').forEach(img => {
     img.addEventListener('click', ()=> openLightbox(img.dataset.img, img.alt));
+  });
+
+  // Añadir event listeners a los nuevos botones "Añadir al Carrito"
+  document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+    button.addEventListener('click', (e) => {
+      const productData = e.target.dataset;
+      const product = {
+        codigo: productData.codigo,
+        producto: productData.producto,
+        precio: Number(productData.precio),
+        imagen: productData.imagen,
+        uni_x_ca: Number(productData.uni_x_ca),
+        categoria: productData.categoria,
+        origen: productData.origen,
+        nota: productData.nota
+      };
+      // Llama a la función global addToCart definida en cart.js
+      if (window.addToCart) {
+        window.addToCart(product);
+      } else {
+        console.error('addToCart no está definida. Asegúrate de que cart.js se cargue correctamente.');
+      }
+    });
   });
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));

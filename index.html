@@ -15,6 +15,8 @@
       </div>
       <div class="header-actions">
         <input id="search" type="search" placeholder="Buscar por nombre o código..." aria-label="Buscar productos">
+        <!-- Botón del carrito -->
+        <button id="cart-button" class="cart-button" aria-label="Ver carrito" data-tooltip="Ver carrito">🛒 <span id="cart-count" class="cart-count">0</span></button>
       </div>
     </div>
   </header>
@@ -41,7 +43,12 @@
     </aside>
 
     <section class="catalog-area">
-      <div id="catalog" class="grid" aria-live="polite"></div>
+      <div id="catalog" class="grid" aria-live="polite">
+        <div class="loading-indicator">
+          <div class="spinner"></div>
+          <p>Cargando productos...</p>
+        </div>
+      </div>
       <div class="pager" id="pager"></div>
     </section>
   </main>
@@ -55,6 +62,74 @@
     </div>
   </div>
 
+  <!-- Modal del Carrito -->
+  <div id="cart-modal" class="modal" aria-hidden="true" role="dialog">
+    <div class="modal-content">
+      <button class="modal-close" aria-label="Cerrar carrito">×</button>
+      <h2>Tu Carrito</h2>
+      <div id="cart-items" class="cart-items">
+        <!-- Los items del carrito se renderizarán aquí -->
+        <div class="empty-state">
+          
+          <h3 class="empty-cart-message">Tu carrito está vacío</h3>
+          <p class="empty-cart-subtext">Agrega productos para comenzar</p>
+          <button class="btn-continue btn-primary">Explorar Catálogo</button>
+        </div>
+      </div>
+      <div class="cart-summary">
+        <div class="summary-row">
+          <span>Subtotal:</span>
+          <span id="cart-subtotal">$ 0.00</span>
+        </div>
+        <div class="summary-row">
+          <span>Envío:</span>
+          <span id="shipping-cost">-</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-row total-row">
+          <span>Total:</span>
+          <span id="cart-total">$ 0.00</span>
+        </div>
+        <div class="shipping-note">
+          <i class="icon-info"></i> El envío se calcula al finalizar
+        </div>
+      </div>
+      <div id="customer-info-form" class="customer-info-form" style="display:none;">
+        <h3><i class="icon-user"></i> Datos del Cliente</h3>
+        
+        <div class="form-group">
+          <label for="customer-name">Nombre y Apellido</label>
+          <input type="text" id="customer-name" placeholder="Ej: Juan Pérez" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="customer-email">Correo Electrónico</label>
+          <input type="email" id="customer-email" placeholder="tucorreo@ejemplo.com" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="customer-dni">DNI / Documento</label>
+          <input type="text" id="customer-dni" placeholder="12345678" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="payment-method">Método de Pago</label>
+          <select id="payment-method" required>
+            <option value="">Seleccionar método...</option>
+            <option value="efectivo">💵 Efectivo</option>
+            <option value="transferencia">🏦 Transferencia Bancaria</option>
+            <option value="credito">💳 Tarjeta de Crédito</option>
+          </select>
+        </div>
+      </div>
+      <div class="cart-actions">
+        <button id="checkout-button" class="btn btn-primary">Terminar Pedido</button>
+        <button id="back-to-cart-button" class="btn btn-secondary" style="display:none;">Volver al Carrito</button>
+      </div>
+    </div>
+  </div>
+
   <script src="script.js" defer></script>
+  <script src="cart.js" defer></script>
 </body>
 </html>
