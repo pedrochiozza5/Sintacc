@@ -3,50 +3,72 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Catálogo</title>
+  <title>Catálogo de Productos - Agosto 2025</title>
+  <meta name="description" content="Catálogo de productos actualizado - Agosto 2025. Busca por código, nombre, categoría u origen.">
+  <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Loader -->
+  <div id="loader" class="loader-overlay">
+    <div class="loader"></div>
+    <p class="loader-text">Cargando catálogo...</p>
+  </div>
+
+  <!-- Header -->
   <header class="site-header">
     <div class="container header-inner">
       <div>
         <h1 class="brand">Catálogo</h1>
-        <div class="subtitle">Lista: agosto de 2025</div>
+        <div class="subtitle">Lista: agosto de 2025 (puede tener cambios de precio y no estar actualizada)</div>
       </div>
       <div class="header-actions">
+        <label for="search" class="visually-hidden">Buscar productos</label>
         <input id="search" type="search" placeholder="Buscar por nombre o código..." aria-label="Buscar productos">
+        <button id="openCartBtn" class="toggle-filters">Ver Carrito</button>
       </div>
     </div>
   </header>
 
+  <!-- Main -->
   <main class="container main-grid">
+    <!-- Filtros -->
     <aside class="filters" aria-label="Filtros de catálogo">
-      <label>Categoria
-        <select id="categoria"><option value="">Todas las categorías</option></select>
-      </label>
-      <label>Origen
-        <select id="origen"><option value="">Todos los orígenes</option></select>
-      </label>
-      <label>Ordenar
-        <select id="sort">
-          <option value="relevancia">Relevancia</option>
-          <option value="precio_asc">Precio ↑</option>
-          <option value="precio_desc">Precio ↓</option>
-        </select>
-      </label>
-      <label>Items / página
-        <select id="perPage"><option>12</option><option>24</option><option>48</option></select>
-      </label>
-      <div class="filters-note small">Soporta columna `imagen` / `imagen_url` en tu Google Sheet para fotos.</div>
+      <button id="toggle-filters" class="toggle-filters">Mostrar Filtros</button>
+      <form id="filtersForm" class="hidden">
+        <fieldset>
+          <legend>Filtros</legend>
+          <label for="origen">Origen</label>
+          <select id="origen">
+            <option value="">Todos los orígenes</option>
+          </select>
+
+          <label for="sort">Ordenar</label>
+          <select id="sort">
+            <option value="relevancia">Relevancia</option>
+            <option value="precio_asc">Precio ↑</option>
+            <option value="precio_desc">Precio ↓</option>
+          </select>
+
+          <label for="perPage">Items / página</label>
+          <select id="perPage">
+            <option>12</option>
+            <option>24</option>
+            <option>48</option>
+          </select>
+        </fieldset>
+      </form>
+      <div class="filters-note small">Soporta columna <code>imagen</code> o <code>imagen_url</code> para fotos.</div>
     </aside>
 
+    <!-- Catálogo -->
     <section class="catalog-area">
       <div id="catalog" class="grid" aria-live="polite"></div>
-      <div class="pager" id="pager"></div>
+      <nav class="pager" id="pager" aria-label="Paginación"></nav>
     </section>
   </main>
 
-  <!-- Modal lightbox -->
+  <!-- Lightbox -->
   <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog">
     <button class="lb-close" aria-label="Cerrar imagen">×</button>
     <div class="lb-content">
@@ -55,6 +77,64 @@
     </div>
   </div>
 
+  <!-- Modal Carrito -->
+<div id="cartModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="close" id="closeCartBtn">&times;</span>
+    <h2>Carrito de Compras</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody id="cartBody"></tbody>
+    </table>
+    <div>Total: <span id="cartTotal">0</span></div>
+    <button id="openCheckoutBtn">Finalizar Pedido</button>
+  </div>
+</div>
+
+<!-- Modal Finalizar Pedido -->
+<div id="checkoutModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="close" id="closeCheckout">&times;</span>
+    <h2>Finalizar Pedido</h2>
+    <form id="checkoutForm">
+      <label>Número de Cliente</label>
+      <input type="text" id="clienteNumero" required>
+
+      <label>Nombre de la Persona</label>
+      <input type="text" id="clienteNombre" required>
+
+      <label>Nombre del Local</label>
+      <input type="text" id="clienteLocal">
+
+      <label>Dirección y Altura</label>
+      <input type="text" id="clienteDireccion" required>
+
+      <label>CUIT / CUIL</label>
+      <input type="text" id="clienteCuit">
+
+      <label>Número de Contacto</label>
+      <input type="text" id="clienteTelefono" required>
+
+      <button type="submit" class="btn-whatsapp">Enviar a WhatsApp</button>
+    </form>
+  </div>
+</div>
+
+
+  <!-- Scripts -->
+  <script>
+    window.addEventListener("load", () => {
+      const loader = document.getElementById("loader");
+      setTimeout(() => loader.classList.add("hidden"), 500);
+    });
+  </script>
   <script src="script.js" defer></script>
 </body>
 </html>
